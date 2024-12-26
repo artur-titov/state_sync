@@ -8,11 +8,11 @@ on:
 jobs:
   ci:
     name: CI
-    runs-on: ${{matrix.platform}}
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        python-version: [3.12, 3.13]
+        python-version: ["3.12", "3.13"]
+    runs-on: ${{matrix.platform}}
     permissions:
         contents: read
 
