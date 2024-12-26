@@ -96,16 +96,13 @@ class StateSyncModel:
                 self._check_result(package, process.returncode)
 
             case "snap":
+                command = f"sudo {self.__installation_command[distributor]} {package}"
+
                 if classic:
-                    process = subprocess.run(
-                        [f"sudo {self.__installation_command[distributor]} {package} --classic"],
-                        shell=True,
-                        check=False
-                    )
-                    self._check_result(package, process.returncode)
+                    command = f"sudo {self.__installation_command[distributor]} {package} --classic"
 
                 process = subprocess.run(
-                    [f"sudo {self.__installation_command[distributor]} {package}"],
+                    [command],
                     shell=True,
                     check=False
                 )
