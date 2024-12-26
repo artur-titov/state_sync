@@ -9,7 +9,6 @@ class StateSyncModel:
     """Class description"""
 
     def __init__(self):
-        self.validate = Validate()
         self.__installation_command = {
             "apt": "apt install",
             "flatpak": "flatpak install flathub",
@@ -32,7 +31,7 @@ class StateSyncModel:
                         classic = False
 
                     # Define current package state in OS
-                    current_state = self.validate.is_package_present(
+                    current_state = Validate().is_package_present(
                         package,
                         app["distributor"]
                     )
