@@ -29,8 +29,6 @@ The OS synchronizes with the settings entered in the configuration file.
 
 ## Roadmap
 
-|
-
 ### Step 1
 
 | Status    | Target    | Description   |
