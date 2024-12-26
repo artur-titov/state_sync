@@ -27,10 +27,6 @@ The OS synchronizes with the settings entered in the configuration file.
 
 ## Roadmap
 
-Description.
-
-|
-
 |
 
 ### Step 1
@@ -41,19 +37,11 @@ Description.
 | __done__      | Unit tests    ||
 | *in progress* | CI/CD | linter, tests |
 
-|
-
-|
-
 ### Step 2
 
 | Status    | Target    | Description   |
 | :---      | :---      | :---          |
 | planned   | Distribute as Deb-package | For 'apt install state-sync' |
-
-|
-
-|
 
 ### Step 3
 
@@ -63,10 +51,6 @@ Description.
 | backlog   | Gsettings  ||
 | backlog   | Post commands    ||
 
-|
-
-|
-
 ### Step 4
 
 | Status    | Target    | Description   |
@@ -75,19 +59,11 @@ Description.
 | backlog   | Custom app synchronisation ||
 | backlog   | Pull model | Settings to sync in background |
 
-|
-
-|
-
 ### In Future
 
 | Status    | Target    | Description   |
 | :---      | :---      | :---          |
 | backlog   | Support other distributors | pacman, dnf, etc. |
 | backlog   | Pull model | Settings to sync in background |
-
-|
-
-|
 
 ...
