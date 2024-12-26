@@ -22,8 +22,10 @@ The OS synchronizes with the settings entered in the configuration file.
 
 ## Tested with
 
-- Ubuntu 24.04 LTS
-- Python 3.12.3
+![example branch parameter](https://github.com/artur-titov/state-sync/actions/workflows/ci.yml/badge.svg?branch=development)
+
+- Ubuntu 22.04+
+- Python 3.12+
 
 ## Roadmap
 
