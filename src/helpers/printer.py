@@ -1,7 +1,7 @@
-"""Module providing a class for printing messages in terminal."""
+"""Provides a class for printing messages in terminal."""
 
 class Printer:
-    """Class providing a methods for printing messages in terminal."""
+    """Provides a methods for printing messages in terminal."""
 
     def __init__(self):
         self.__decorate = {
@@ -25,7 +25,7 @@ class Printer:
 
 
     def _make_decorated(self, content: str, style: str) -> str:
-        """Decorate input data
+        """Decorates input data.
         
         Parameters
         ----------
@@ -52,7 +52,7 @@ class Printer:
 
 
     def _print_result(self, status: str, title: str, description: str) -> None:
-        """Print prepared message in terminal
+        """Prints prepared message in terminal.
         
         Parameters
         ----------
@@ -70,7 +70,7 @@ class Printer:
 
 
     def to_show_result(self, changed: bool, initiator: str, description: str) -> None:
-        """Method for displaying sync result
+        """Displays synchronization result.
 
         If an exception is raised during synchronization, 
         the 'for_attention' method is responsible for decorating it.
@@ -99,9 +99,10 @@ class Printer:
 
 
     def for_attention(self, initiator: str, msg: str, attention_level: str) -> None:
-        """Method for displaying error messages
+        """Displays error messages.
 
-        For displaying sync result will be better use to show_result method.
+        For displaying synchronization result 
+        will be better use 'to_show_result' method.
         
         Parameters
         ----------
