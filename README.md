@@ -6,7 +6,7 @@ Of course, I know about [Ansible]([https://](https://www.redhat.com/en/ansible-c
 
 ## How it works
 
-First you need to create a YAML [configuration file][https://](https://github.com/artur-titov/state-sync/blob/master/config-example.yml).
+First you need to create a YAML [configuration file](https://github.com/artur-titov/state-sync/blob/master/config-example.yml).
 
 Following the GitOps approach, place the config file in a separate repository.
 
