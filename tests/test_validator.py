@@ -3,7 +3,7 @@
 import unittest
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-from core.helpers.validator import Validator as Validate
+from src.helpers.validator import Validator as Validate
 
 
 class TestValidator(unittest.TestCase):

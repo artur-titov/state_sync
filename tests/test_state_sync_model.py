@@ -1,7 +1,7 @@
 """Module description"""
 
 import unittest
-from core.models.state_sync_model import StateSyncModel as StateSync
+from src.models.state_sync_model import StateSyncModel as StateSync
 
 
 class TestStateSyncModel(unittest.TestCase):
