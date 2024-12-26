@@ -1,0 +1,45 @@
+global:
+  #
+  # If you do not want to install any settings pool, set the value to "no". 
+  # If the pool is actually installed, then after launching the pool 
+  # removal process will not be initialized. 
+  # Removal is implemented at the Applications settings level (present: yes/no).
+  pools_to_synchronize:
+    stack: yes
+    gsettings: no
+    post_commands: yes
+
+stack:
+  #
+  # You can split the Application settings into different groups.
+  # For example: "test" or "os_features", "user_stack", etc.
+  test:
+    #
+    # This is a test Application 
+    # that containing one package.
+    # 
+    # Use "app" for text your Application title.
+    # This title will be shows in the terminal output when instalation process starts.
+    - app: Hello World
+      #
+      # You can add more then one package for one Application.
+      packages:
+        - hello-world
+      #
+      # Here you can set distributor for your application - apt, snap, flatpak, etc.
+      distributor: snap
+      #
+      # If your snap Application setup needs a --classic argument, use
+      # "classic: yes" setting. If you don`t need --classic argument 
+      # you don`t need set this parameter. Just don't write it.
+      classic: yes
+      #
+      # When your Application is not installet and "present" sets to "no"
+      # There will be no changes.
+      #
+      # When your Application is installed and "present" sets to "no"
+      # Your application will be removed from OS.
+      #
+      # When your Application is installed and "present" sets to "yes"
+      # There will be no changes too.
+      present: yes
