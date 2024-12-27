@@ -1,4 +1,4 @@
-"""Module description."""
+"""Starts state-sync utility"""
 
 import sys
 from src.helpers.printer import Printer as Print
@@ -6,7 +6,7 @@ from src.state_sync_controller import StateSyncController as State
 
 
 def main():
-    """Method description"""
+    """Main function"""
 
     if len(sys.argv) < 2:
         Print().for_attention("StateSync", "Please, set a config file.", "danger")

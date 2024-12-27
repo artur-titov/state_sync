@@ -1,41 +1,41 @@
-"""Module description"""
+"""Provides test functionality for Validator class."""
 
 import unittest
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-from core.helpers.validator import Validator as Validate
+from src.helpers.validator import Validator as Validate
 
 
 class TestValidator(unittest.TestCase):
-    """Class description"""
+    """Provides test methods for Validator class."""
 
     def setUp(self):
-        """Preparing for tests, create an instance of the Validator class"""
+        """Prepares for tests, creates an instance of the Validator class"""
         self.validate = Validate()
 
 
     def test__is_file_supported__with_yml_extension__positive(self):
-        """Сase when the path points to a file with yml extensions"""
+        """Case when the path points to a file with yml extensions"""
         path = "/example/directory/config.yml"
         self.assertTrue(self.validate.is_file_supported(path))
 
     def test__is_file_supported__with_yaml_extension__positive(self):
-        """Сase when the path points to a file with yaml extension"""
+        """Case when the path points to a file with yaml extension"""
         path = "/example/directory/config.yaml"
         self.assertTrue(self.validate.is_file_supported(path))
 
     def test__is_file_supported__with_yaml_uppercase_extension__positive(self):
-        """Сase when the path points to a file with uppercase extensions"""
+        """Case when the path points to a file with uppercase extensions"""
         path = "/example/directory/config.YAML"
         self.assertTrue(self.validate.is_file_supported(path))
 
     def test__is_file_supported__with_invalid_extension__negative(self):
-        """Сase when the path points to a file with invalid extension"""
+        """Case when the path points to a file with invalid extension"""
         path = "/example/directory/config.txt"
         self.assertFalse(self.validate.is_file_supported(path))
 
     def test__is_file_supported__without_extension__negative(self):
-        """Сase when the path points to a file without extension"""
+        """Case when the path points to a file without extension"""
         path = "/example/directory/config"
         self.assertFalse(self.validate.is_file_supported(path))
 

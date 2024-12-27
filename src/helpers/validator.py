@@ -1,4 +1,4 @@
-"""Module description"""
+"""Provides validation functionality."""
 
 import re
 import subprocess
@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 class Validator:
-    """Class description"""
+    """Provides methods for data validation."""
 
     def __init__(self):
         self.__installation_check = {
@@ -16,14 +16,39 @@ class Validator:
         }
 
 
-    def is_file_supported(self, path: Path) -> bool:
-        """Method description"""
+    def is_file_supported(self, file: Path) -> bool:
+        """Validates config file extension.
+        
+        Parameters
+        ----------
+        file : Path
+            Path to file.
+
+        Returns
+        -------
+        bool : bool
+            Supported or not.
+        """
         supported = re.compile(r".*\.(yml|yaml)$", re.I)
-        return bool(supported.match(path))
+        return bool(supported.match(file))
 
 
     def is_file_exists(self, filepath: Path) -> bool:
-        """Method description"""
+        """Checks if file exists.
+
+        Path to remote file is not supported and
+        will be interpreted as 'file is not exists'.
+        
+        Parameters
+        ----------
+        filepath : Path
+            Path to file.
+
+        Returns
+        -------
+        bool : bool
+            Exists or not.
+        """
         path = Path(filepath)
         exists = path.is_file()
 
@@ -34,7 +59,20 @@ class Validator:
 
 
     def is_package_present(self, package: str, distributor: str) -> bool:
-        """Method description"""
+        """Checks if a package is installed on the system.
+        
+        Parameters
+        ----------
+        package : str
+            Package name.
+        distributor : str
+            Package distributor (apt, snap, flatpak, etc.)
+
+        Returns
+        -------
+        bool : bool
+            Present or not.
+        """
         process = subprocess.run(
             f"{self.__installation_check[distributor]} {package} > /dev/null 2>&1",
             shell=True,

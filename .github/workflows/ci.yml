@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  ci:
+    name: CI
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        python-version: ["3.12", "3.13"]
+    runs-on: ${{matrix.platform}}
+    permissions:
+        contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: development
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Start tests
+        run: make test

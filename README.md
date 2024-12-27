@@ -22,12 +22,12 @@ The OS synchronizes with the settings entered in the configuration file.
 
 ## Tested with
 
-- Ubuntu 24.04 LTS
-- Python 3.12.3
+![example branch parameter](https://github.com/artur-titov/state-sync/actions/workflows/ci.yml/badge.svg?branch=development)
+
+- Ubuntu 22.04+
+- Python 3.12+
 
 ## Roadmap
-
-|
 
 ### Step 1
 
@@ -35,13 +35,14 @@ The OS synchronizes with the settings entered in the configuration file.
 | :---      | :---      | :---          |
 | __done__      | Basic app syncronization  | *apt, snap, flatpak* |
 | __done__      | Unit tests    ||
-| *in progress* | CI/CD | linter, tests |
+| __done__      | CI | Continuous integration |
 
 ### Step 2
 
 | Status    | Target    | Description   |
 | :---      | :---      | :---          |
 | planned   | Distribute as Deb-package | For 'apt install state-sync' |
+| planned   | CD | Continuous delivery |
 
 ### Step 3
 
