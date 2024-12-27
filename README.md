@@ -58,7 +58,6 @@ The OS synchronizes with the settings entered in the configuration file.
 | :---      | :---      | :---          |
 | backlog   | Sync based on remote file? ||
 | backlog   | Custom app synchronisation ||
-| backlog   | Pull model | Settings to sync in background |
 
 ### In Future
 
