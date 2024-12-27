@@ -1,4 +1,4 @@
-"""Module description"""
+"""Provides synchronization functionality as a controller."""
 
 import sys
 from pathlib import Path
@@ -9,12 +9,19 @@ from src.models.state_sync_model import StateSyncModel as StateSync
 
 
 class StateSyncController:
-    """Class description"""
+    """Provides methods for state synchronizing as a controller."""
 
 
-    def check(self, path: Path):
-        """Method description"""
+    def check(self, path: Path) -> None:
+        """Validates config file before start synchronization.
 
+        If data not valid prints error and calls sys.exit(1).
+        
+        Parameters
+        ----------
+        path : Path
+            Config file path.
+        """
         validate = Validator()
 
         # Validate file extension
@@ -40,9 +47,18 @@ class StateSyncController:
             sys.exit(1)
 
 
-    def sync_from(self, filepath: Path):
-        """Method description"""
+    def sync_from(self, filepath: Path) -> None:
+        """Starts synchronization process.
 
+        If the pool is not marked for synchronization it not installs. 
+        After that will be print a message.
+        If synchronisation gots an error prints result and calls sys.exit(1).
+        
+        Parameters
+        ----------
+        filepath : Path
+            Config file path.
+        """
         # Parse config file
         config = Parse().yml(filepath)
 
