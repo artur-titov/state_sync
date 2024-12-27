@@ -1,14 +1,14 @@
-"""Module description"""
+"""Provides test functionality for StateSyncModel class."""
 
 import unittest
 from src.models.state_sync_model import StateSyncModel as StateSync
 
 
 class TestStateSyncModel(unittest.TestCase):
-    """Class description"""
+    """Provides test methods for StateSyncModel class."""
 
     def setUp(self):
-        """Preparing for tests, create an instance of the StateSyncModel class"""
+        """Prepares for tests, creates an instance of the StateSyncModel class"""
         self.obj = StateSync()
 
 
