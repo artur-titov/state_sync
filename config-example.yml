@@ -7,7 +7,7 @@ global:
   pools_to_synchronize:
     stack: yes
     gsettings: no
-    post_commands: yes
+    post_commands: no
 
 stack:
   #
