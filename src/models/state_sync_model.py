@@ -19,6 +19,10 @@ class StateSyncModel:
     def sync_stack(self, pool: dict) -> None:
         """Starts state synchronization.
         
+        Defines update case and try it.
+        Prints the result after each attempt.
+        If something goes wrong, raises an error.
+
         Parameters
         ----------
         pool : dict
@@ -119,6 +123,8 @@ class StateSyncModel:
 
     def _install_package(self, distributor: str, package: str, classic: bool) -> None:
         """Causes the shell command to be run to install the package.
+
+        Runs command and check result after that.
         
         Parameters
         ----------
@@ -155,6 +161,8 @@ class StateSyncModel:
 
     def _remove_package(self, distributor: str, package: str) -> None:
         """Causes the shell command to be run to remove the package.
+
+        Runs command and check result after that.
         
         Parameters
         ----------
