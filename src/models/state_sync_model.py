@@ -197,7 +197,7 @@ class StateSyncModel:
                 self._check_result(package, process.returncode)
 
                 process = subprocess.run([
-                    "sudo flatpak uninstall --unused"
+                    "sudo flatpak uninstall -y --unused"
                 ], shell=True, check=False)
                 self._check_result(package, process.returncode)
 
