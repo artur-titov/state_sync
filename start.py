@@ -1,7 +1,7 @@
 """Starts state-sync utility"""
 
 import sys
-from src.helpers.printer import Printer as Print
+from src.view.console_log import ConsoleLog as Console
 from src.state_sync_controller import StateSyncController as State
 
 
@@ -9,7 +9,10 @@ def main():
     """Main function"""
 
     if len(sys.argv) < 2:
-        Print().for_attention("StateSync", "Please, set a config file.", "danger")
+        Console().log(
+            "error", 
+            "Please, set a config file."
+        )
         sys.exit(1)
 
     else:

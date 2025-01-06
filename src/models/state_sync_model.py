@@ -1,8 +1,8 @@
 """Provides synchronization functionality."""
 
 import subprocess
+from src.view.console_log import ConsoleLog as Console
 from src.helpers.validator import Validator as Validate
-from src.helpers.printer import Printer as Print
 
 
 class StateSyncModel:
@@ -14,6 +14,7 @@ class StateSyncModel:
             "flatpak": "flatpak install flathub",
             "snap": "snap install",
         }
+        self.__console = Console()
 
 
     def sync_stack(self, pool: dict) -> None:
@@ -61,19 +62,28 @@ class StateSyncModel:
                         case "install":
                             try:
                                 self._install_package(app["distributor"], package, classic)
-                                Print().to_show_result(True, package, "Package installed.")
+                                self.__console.log(
+                                    "warning",
+                                    f"{package} --> Package installed."
+                                )
                             except RuntimeError as exc:
                                 raise RuntimeError from exc
 
                         case "remove":
                             try:
                                 self._remove_package(app["distributor"], package)
-                                Print().to_show_result(True, package, "Package removed.")
+                                self.__console.log(
+                                    "warning",
+                                    f"{package} --> Package removed."
+                                )
                             except RuntimeError as exc:
                                 raise RuntimeError from exc
 
                         case "no_changes":
-                            Print().to_show_result(False, package, "No need to update.")
+                            self.__console.log(
+                                "info",
+                                f"{package} --> No need to update."
+                            )
 
 
     def _define_update_case(self, present: bool, need_to_present: bool) -> str:
