@@ -1,7 +1,6 @@
 """Provides console log functionality."""
 
 import logging
-# from logging.handlers import SysLogHandler
 from src.helpers.console_log_formatter import ConsoleLogFormatter as LogFormat
 
 
