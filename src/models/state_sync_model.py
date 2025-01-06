@@ -64,7 +64,7 @@ class StateSyncModel:
                                 self._install_package(app["distributor"], package, classic)
                                 self.__console.log(
                                     "warning",
-                                    f"{package} --> Package installed."
+                                    f"'{package}' --> Package installed."
                                 )
                             except RuntimeError as exc:
                                 raise RuntimeError from exc
@@ -74,7 +74,7 @@ class StateSyncModel:
                                 self._remove_package(app["distributor"], package)
                                 self.__console.log(
                                     "warning",
-                                    f"{package} --> Package removed."
+                                    f"'{package}' --> Package removed."
                                 )
                             except RuntimeError as exc:
                                 raise RuntimeError from exc
@@ -82,7 +82,7 @@ class StateSyncModel:
                         case "no_changes":
                             self.__console.log(
                                 "info",
-                                f"{package} --> No need to update."
+                                f"'{package}' --> No need to update."
                             )
 
 
