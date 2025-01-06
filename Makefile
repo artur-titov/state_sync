@@ -18,4 +18,4 @@ test:
 # StateSync start command:
 # FROM - path to config yml file.
 sync:
-	python3 start.py "${FROM}"
+	python3 start.py ${FROM}
