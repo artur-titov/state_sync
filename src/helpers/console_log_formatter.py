@@ -1,13 +1,27 @@
-"""M"""
+"""Provides console output formatting."""
 
 import logging
 
 
 class ConsoleLogFormatter(logging.Formatter):
-    """D"""
+    """Logs formatter."""
+
 
     def format(self, record):
-        """D"""
+        """Validates config file before start synchronization.
+
+        If data not valid prints error and calls sys.exit(1).
+        
+        Parameters
+        ----------
+        record : LogRecord
+            Log message.
+
+        Returns
+        -------
+        record : LogRecord
+            Returns formatted message.
+        """
         marker = {
             "blue": "\033[94m",
             "green": "\033[32m",

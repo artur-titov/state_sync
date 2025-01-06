@@ -1,4 +1,4 @@
-"""M"""
+"""Provides console log functionality."""
 
 import logging
 # from logging.handlers import SysLogHandler
@@ -7,10 +7,9 @@ from src.helpers.console_log_formatter import ConsoleLogFormatter as LogFormat
 
 # logging.Formatter
 class ConsoleLog():
-    """D"""
+    """Provides methods for output logs to console."""
 
     def __init__(self):
-        """D"""
         self.__console_formatter = LogFormat(
             "%(levelname)s %(name)s %(message)s %(asctime)s",
             "%H:%M:%S"
@@ -24,7 +23,15 @@ class ConsoleLog():
 
 
     def log(self, level: str, message: str) -> None:
-        """D"""
+        """Starts logging.
+        
+        Parameters
+        ----------
+        level : str
+            Log level.
+        message: str
+            Log message.
+        """
         match level:
             case "debug":
                 self.__logger.debug(message)
