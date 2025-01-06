@@ -117,7 +117,7 @@ class StateSyncModel:
         """
         if return_code != 0:
             raise RuntimeError(
-                f"{package} return code { return_code } when try to sync stack."
+                f"'{package}' installation return code {return_code} when try to sync stack."
             )
 
 
