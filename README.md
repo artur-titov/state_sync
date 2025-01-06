@@ -41,6 +41,7 @@ The OS synchronizes with the settings entered in the configuration file.
 
 | Status    | Target    | Description   |
 | :---      | :---      | :---          |
+| planned   | Custom commands           | Commands for custom installations |
 | planned   | Distribute as Deb-package | For 'apt install state-sync' |
 | planned   | CD | Continuous delivery |
 
@@ -50,7 +51,6 @@ The OS synchronizes with the settings entered in the configuration file.
 | :---      | :---      | :---          |
 | backlog   | Integration tests ||
 | backlog   | Gsettings  ||
-| backlog   | Post commands    ||
 
 ### Step 4
 
