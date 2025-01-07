@@ -47,5 +47,5 @@ class TestStateSyncModel(unittest.TestCase):
             self.obj._check_result(package, return_code)
         self.assertEqual(
             str(context.exception),
-            "hello-world return code 1 when try to sync stack."
+            "'hello-world' installation return code 1 when try to sync stack."
         )

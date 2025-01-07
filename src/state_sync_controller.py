@@ -3,13 +3,16 @@
 import sys
 from pathlib import Path
 from src.helpers.validator import Validator
-from src.helpers.printer import Printer as Print
+from src.view.console_log import ConsoleLog as Console
 from src.models.parser_model import ParserModel as Parse
 from src.models.state_sync_model import StateSyncModel as StateSync
 
 
 class StateSyncController:
     """Provides methods for state synchronizing as a controller."""
+
+    def __init__(self):
+        self.__console = Console()
 
 
     def check(self, path: Path) -> None:
@@ -28,10 +31,9 @@ class StateSyncController:
         supported = validate.is_file_supported(path)
 
         if not supported:
-            Print().for_attention(
-                "StateSync", 
-                "Sorry, but file with this extension is not supported.", 
-                "danger"
+            self.__console.log(
+                "error", 
+                "Sorry, but a config file with this extension is not supported."
             )
             sys.exit(1)
 
@@ -39,10 +41,9 @@ class StateSyncController:
         exists = validate.is_file_exists(path)
 
         if not exists:
-            Print().for_attention(
-                "StateSync", 
-                "Sorry, but it seems the file is not exists.", 
-                "danger"
+            self.__console.log(
+                "error",
+                "Sorry, but it seems the config file is not exists."
             )
             sys.exit(1)
 
@@ -67,10 +68,9 @@ class StateSyncController:
 
             # If the pool is not marked for synchronization, we display a message
             if not config["global"]["pools_to_synchronize"][pool_name]:
-                Print().for_attention(
-                    "StateSyncController",
-                    f"'{pool_name}' pool disabled in global settings.",
-                    "primary"    
+                self.__console.log(
+                    "warning",
+                    f"'{pool_name}' pool disabled in global settings."
                 )
 
             # If the pool needs to be synchronized, do it
@@ -86,10 +86,9 @@ class StateSyncController:
                 # Start synchronization
                 try:
                     method(config[pool_name])
-                except (RuntimeError, ValueError) as msg:
-                    Print().for_attention(
-                        "StateSyncController",
-                        msg,
-                        "danger"
+                except (RuntimeError, ValueError) as error:
+                    self.__console.log(
+                        "error",
+                        error.__cause__
                     )
                     sys.exit(1)
