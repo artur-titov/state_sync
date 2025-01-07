@@ -20,7 +20,9 @@ make sync FROM="<path_to_config_file>"
 
 The OS synchronizes with the settings entered in the configuration file.
 
-## Tested with
+[![asciicast](https://asciinema.org/a/697470.svg)](https://asciinema.org/a/697470)
+
+## Tested on
 
 ![example branch parameter](https://github.com/artur-titov/state-sync/actions/workflows/ci.yml/badge.svg?branch=development)
 
