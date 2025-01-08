@@ -4,7 +4,7 @@ help:
 	@echo "\nSupported commands             Description\n"
 	@echo "--------------------------------------------------------"
 	@echo "make test                      Run Python unit tests."
-	@echo "make sync FROM=<file>          Lint Ansible files."
+	@echo "make sync FROM=<file>          Sync from config file."
 	@echo "--------------------------------------------------------\n"
 
 
