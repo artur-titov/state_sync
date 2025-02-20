@@ -1,6 +1,7 @@
 """Starts StateSync utility."""
 
 import sys
+from pathlib import Path
 from view import ConsoleView as Console
 from controllers import StateSyncController as State
 
@@ -17,7 +18,7 @@ def main():
         sys.exit(1)
 
     # Starts synchronization with OS.
-    State().sync_from(filepath=sys.argv[1])
+    State().sync_from(filepath=Path(sys.argv[1]))
     sys.exit(0)
 
 
