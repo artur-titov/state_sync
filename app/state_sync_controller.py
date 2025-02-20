@@ -2,10 +2,10 @@
 
 import sys
 from pathlib import Path
-from src.helpers.validator import Validator
-from src.view.console_log import ConsoleLog as Console
-from src.models.parser_model import ParserModel as Parse
-from src.models.state_sync_model import StateSyncModel as StateSync
+from app.helpers.validator import Validator
+from app.view.console_log import ConsoleLog as Console
+from app.models.parser_model import ParserModel as Parse
+from app.models.state_sync_model import StateSyncModel as StateSync
 
 
 class StateSyncController:

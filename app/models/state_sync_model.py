@@ -1,8 +1,8 @@
 """Provides synchronization functionality."""
 
 import subprocess
-from src.view.console_log import ConsoleLog as Console
-from src.helpers.validator import Validator as Validate
+from app.view.console_log import ConsoleLog as Console
+from app.helpers.validator import Validator as Validate
 
 
 class StateSyncModel:

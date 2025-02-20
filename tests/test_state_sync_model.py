@@ -1,7 +1,7 @@
 """Provides test functionality for StateSyncModel class."""
 
 import unittest
-from src.models.state_sync_model import StateSyncModel as StateSync
+from app.models.state_sync_model import StateSyncModel as StateSync
 
 
 class TestStateSyncModel(unittest.TestCase):

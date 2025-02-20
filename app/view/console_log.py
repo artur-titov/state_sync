@@ -1,7 +1,7 @@
 """Provides console log functionality."""
 
 import logging
-from src.helpers.console_log_formatter import ConsoleLogFormatter as LogFormat
+from app.helpers.console_log_formatter import ConsoleLogFormatter as LogFormat
 
 
 # logging.Formatter

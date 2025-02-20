@@ -1,8 +1,8 @@
 """Starts state-sync utility"""
 
 import sys
-from src.view.console_log import ConsoleLog as Console
-from src.state_sync_controller import StateSyncController as State
+from app.view.console_log import ConsoleLog as Console
+from app.state_sync_controller import StateSyncController as State
 
 
 def main():
