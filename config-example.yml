@@ -19,10 +19,10 @@ stack:
     # that containing one package.
     # 
     # Use "app" for text your Application title.
-    # This title will be shows in the terminal output when instalation process starts.
+    # This title will be shows in the terminal output when installation process starts.
     - app: Hello World
       #
-      # You can add more then one package for one Application.
+      # You can add more than one package for one Application.
       packages:
         - hello-world
       #
@@ -34,12 +34,12 @@ stack:
       # you don`t need set this parameter. Just don't write it.
       classic: yes
       #
-      # When your Application is not installet and "present" sets to "no"
+      # When your Application is not installed and "present" sets to "no"
       # There will be no changes.
       #
       # When your Application is installed and "present" sets to "no"
       # Your application will be removed from OS.
       #
       # When your Application is installed and "present" sets to "yes"
-      # There will be no changes too.
+      # There will be no changes either.
       present: yes
