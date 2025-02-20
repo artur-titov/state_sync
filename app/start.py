@@ -9,18 +9,15 @@ def main():
     """Starts synchronization."""
 
     # Checks whether a file path is specified.
-    if len(sys.argv) < 2:
+    if len(sys.argv) != 2:
         Console().log(
             level="error",
-            message="Please, set a path to config file."
+            message="Please, set a path to configuration file."
         )
         sys.exit(1)
 
-    # Creates instance of App controller.
-    state = State()
-
     # Starts synchronization with OS.
-    state.sync_from(filepath=sys.argv[1])
+    State().sync_from(filepath=sys.argv[1])
     sys.exit(0)
 
 
