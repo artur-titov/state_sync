@@ -1,6 +1,8 @@
 # IDE files
 #
 *.code-workspace
+.vscode
+.idea
 
 # Python cache files
 #
