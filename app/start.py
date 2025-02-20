@@ -1,29 +1,28 @@
-"""Starts state-sync utility"""
+"""Starts StateSync utility."""
 
 import sys
-from app.view.console_log import ConsoleLog as Console
-from app.state_sync_controller import StateSyncController as State
+from view import ConsoleView as Console
+from controllers import StateSyncController as State
 
 
 def main():
-    """Main function"""
+    """Starts synchronization."""
 
+    # Checks whether a file path is specified.
     if len(sys.argv) < 2:
         Console().log(
-            "error", 
-            "Please, set a config file."
+            level="error",
+            message="Please, set a path to config file."
         )
         sys.exit(1)
 
-    else:
-        config = sys.argv[1]
-        state = State()
+    # Creates instance of App controller.
+    state = State()
 
-        # Try to validate file and check is file exists.
-        state.check(config)
+    # Starts synchronization with OS.
+    state.sync_from(filepath=sys.argv[1])
+    sys.exit(0)
 
-        # Synchronize config with OS.
-        state.sync_from(config)
 
 if __name__ == "__main__":
     main()
