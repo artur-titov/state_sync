@@ -3,7 +3,7 @@
 import sys
 from pathlib import Path
 
-from controllers import StateSync as State
+from controllers import State as State
 from views import ConsoleView as Console
 
 
