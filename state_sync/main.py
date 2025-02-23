@@ -3,8 +3,8 @@
 import sys
 from pathlib import Path
 
-from controllers import State as State
-from views import ConsoleView as Console
+from dispatcher import Dispatcher as Dispatch
+from logs import ConsoleLog as Console
 
 
 def run():
@@ -34,9 +34,10 @@ def run():
         )
         sys.exit(1)
 
-    # Starts synchronization with OS.
-    state = State()
-    state.sync_from(filepath=Path(sys.argv[1]))
+    Dispatch().now(
+        file=Path(sys.argv[1]),
+        arg="plan"
+    )
     sys.exit(0)
 
 
