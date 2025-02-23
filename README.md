@@ -33,19 +33,19 @@ The OS synchronizes with the settings entered in the configuration file.
 
 ### Step 1
 
-| Status    | Target    | Description   |
-| :---      | :---      | :---          |
-| __done__      | Basic app syncronization  | *apt, snap, flatpak* |
-| __done__      | Unit tests    ||
-| __done__      | CI | Continuous integration |
+| Status | Target    | Description   |
+|:-------| :---      | :---          |
+| ✅      | Basic app syncronization  | *apt, snap, flatpak* |
+| ✅      | Unit tests    ||
+| ✅      | CI | Continuous integration |
 
 ### Step 2
 
-| Status    | Target    | Description   |
-| :---      | :---      | :---          |
-| planned   | Custom commands           | Commands for custom installations |
+| Status    | Target                    | Description   |
+| :---      |:--------------------------| :---          |
+| planned   | Late commands             | Commands for custom installations |
 | planned   | Distribute as Deb-package | For 'apt install state-sync' |
-| planned   | CD | Continuous delivery |
+| planned   | CD                        | Continuous delivery |
 
 ### Step 3
 
