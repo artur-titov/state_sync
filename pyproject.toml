@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "state_sync"
+version = "0.3.0-alpha"
+description = "Synchronizes OS installations and settings"
+authors = ["artur-titov"]
+license = "GPL-3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+PyYAML = "6.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
