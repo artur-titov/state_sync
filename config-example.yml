@@ -4,12 +4,11 @@ global:
   # If the pool is actually installed, then after launching the pool 
   # removal process will not be initialized. 
   # Removal is implemented at the Applications settings level (present: yes/no).
-  pools_to_synchronize:
-    stack: yes
-    gsettings: no
-    post_commands: no
+  pool_to_synchronize:
+    - applications
+    - late_commands
 
-stack:
+applications:
   #
   # You can split the Application settings into different groups.
   # For example: "test" or "os_features", "user_stack", etc.
@@ -22,18 +21,6 @@ stack:
     # This title will be shows in the terminal output when installation process starts.
     - app: Hello World
       #
-      # You can add more than one package for one Application.
-      packages:
-        - hello-world
-      #
-      # Here you can set distributor for your application - apt, snap, flatpak, etc.
-      distributor: snap
-      #
-      # If your snap Application setup needs a --classic argument, use
-      # "classic: yes" setting. If you don`t need --classic argument 
-      # you don`t need set this parameter. Just don't write it.
-      classic: yes
-      #
       # When your Application is not installed and "present" sets to "no"
       # There will be no changes.
       #
@@ -42,4 +29,31 @@ stack:
       #
       # When your Application is installed and "present" sets to "yes"
       # There will be no changes either.
-      present: yes
+      presented: no
+      #
+      # Here you can set distributor for your application - apt, snap, flatpak, etc.
+      distributor: snap
+      #
+      # If your snap Application setup needs a --classic argument, use
+      # "classic: yes" setting. If you don`t need --classic argument 
+      # you don`t need set this parameter. Just don't write it.
+      classic: yes
+      # You can add more than one package for one Application.
+      packages:
+        - hello-world
+        - hello
+
+    - app: example
+      presented: no
+      distributor: snap
+      classic: yes
+      packages:
+        - example-lib
+
+late_commands:
+  ui_settings:
+    - group: test_app
+      commands:
+        - command_1
+        - command_2
+      execute: yes
