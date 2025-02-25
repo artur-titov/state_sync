@@ -29,17 +29,9 @@ class Application:
         """Returns distributor name."""
         return self._distributor
 
-    def is_classic(self) -> bool:
-        """Returns --classic status."""
-        return self._classic
-
     def get_items(self) -> dict:
         """Docstring."""
         return self._packages
-
-    def get_item(self, package: str) -> str:
-        """Returns update case."""
-        return self._packages[package]
 
     def set_package_update_case(self, target: str, case: str) -> bool:
         """Sets package update case."""
@@ -48,6 +40,10 @@ class Application:
         except:
             return False
         return True
+
+    def is_classic(self) -> bool:
+        """Returns --classic status."""
+        return self._classic
 
     def is_need_to_be_presented(self) -> bool:
         """Returns the desired status of a Unit."""

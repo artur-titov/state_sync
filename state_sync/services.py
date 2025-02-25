@@ -57,16 +57,16 @@ class StateManager:
                             case = "ignore"
                             level = "info"
 
-                        if not plan_only:
+                        if plan_only:
+                            self._console.log(
+                                level=level,
+                                message=message
+                            )
+                        else:
                             unit.set_package_update_case(
                                 target=package,
                                 case=case
                             )
-
-                        self._console.log(
-                            level=level,
-                            message=message
-                        )
 
         return stack
 
@@ -125,14 +125,14 @@ class SyncManager:
                                     )
                                 except RuntimeError as exc:
                                     raise RuntimeError from exc
-                            case "ignore":
-                                self._console.log(
-                                    level="info",
-                                    message=f"{unit.get_name()} ({package}) --> no needs to be updated."
-                                )
 
                 if isinstance(unit, LateCommands):
                     print(f"LateCommands Unit: {unit.get_name()}")
+
+        self._console.log(
+            level="info",
+            message="DONE"
+        )
 
 
 class CommandRunner:

@@ -36,7 +36,7 @@ def run():
 
     Dispatch().now(
         file=Path(sys.argv[1]),
-        arg="plan"
+        arg="apply"
     )
     sys.exit(0)
 
