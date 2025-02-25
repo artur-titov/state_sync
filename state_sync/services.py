@@ -14,7 +14,7 @@ class StateManager:
         self._console = Console()
 
     def sync_from(self, stack: list[dict], plan_only: bool) -> list[dict]:
-        """Defines application packages updating case.
+        """Defines unit item synchronization case.
 
         Parameters
         ----------
@@ -28,11 +28,6 @@ class StateManager:
         ----------
         stack : list[dict]
             Returns updated stack if 'plan_only' is 'False'.
-
-        Raises
-        ----------
-        RuntimeError
-            Raise stderr.
         """
         for pool in stack:
 
@@ -77,18 +72,23 @@ class StateManager:
 
 
 class SyncManager:
-    """Class docstring."""
+    """Manages stack synchronization with OS."""
 
     def __init__(self):
         self._run = CommandRunner()
         self._console = Console()
 
-    def state_from(self, stack: list[dict]):
-        """Docstring."""
+    def state_from(self, stack: list[dict]) -> None:
+        """Manages synchronization flows based on update case.
+
+        Parameters
+        ----------
+        stack: list[dict]
+            Stack of all pools.
+        """
         for pool in stack:
             for unit in pool["units"]:
 
-                # Rules for all Application units.
                 if isinstance(unit, Application):
 
                     # Creates Unit context for self._run.app_unit_install().
@@ -101,7 +101,6 @@ class SyncManager:
                     packages = unit.get_items()
 
                     for package, update_case in packages.items():
-                        # Setups package name.
                         unit_context["package"] = package
 
                         match update_case:
@@ -138,7 +137,7 @@ class SyncManager:
 
 
 class CommandRunner:
-    """Class docstring."""
+    """Defines and execute commands."""
 
     def __init__(self):
         self._map = {
@@ -158,14 +157,14 @@ class CommandRunner:
 
     @staticmethod
     def _execute(item: str, commands: list[str]) -> bool:
-        """Executes shell command.
+        """Execute shell commands.
 
         Parameters
         ----------
         item: str
-            The name of the particle on which the operation is performed.
+            The name of the item on which the operation is performed.
         commands: list[str]
-            Shell commands that will be executed.
+            List of commands that will be executed.
 
         Returns
         ----------
@@ -175,7 +174,7 @@ class CommandRunner:
         Raises
         ----------
         RuntimeError
-            Raise stderr.
+            Raise stderr with item name.
         """
         for command in commands:
             process = subprocess.run(
@@ -184,7 +183,7 @@ class CommandRunner:
                 check=False
             )
             if process.returncode != 0:
-                raise RuntimeError(process.stderr)
+                raise RuntimeError(f"{item} --> {process.stderr}")
         return True
 
     def app_item_installation_check(self, distributor: str, package: str) -> bool:
@@ -215,7 +214,8 @@ class CommandRunner:
         return True
 
     def app_item_install(self, context: dict) -> bool:
-        """Docstring.
+        """Prepares commands for Application unit installation
+        and transmit it to execute method.
 
         Parameters
         ----------
@@ -230,7 +230,7 @@ class CommandRunner:
         Raises
         ----------
         bool
-            Command stderr.
+            Command stderr with item name.
         """
         commands_to_execute = []
 
@@ -259,7 +259,8 @@ class CommandRunner:
         return True
 
     def app_item_remove(self, context: dict) -> bool:
-        """Docstring.
+        """Prepares commands for Application unit removing
+        and transmit it to execute method.
 
         Parameters
         ----------
@@ -274,7 +275,7 @@ class CommandRunner:
         Raises
         ----------
         bool
-            Command stderr.
+            Command stderr with item name.
         """
         commands_to_execute = []
 
@@ -318,7 +319,6 @@ class CommandRunner:
             raise RuntimeError from exc
         return True
 
-    @staticmethod
-    def late_command() -> bool:
-        """Docstring."""
-        return True
+    # def late_command() -> bool:
+    #     """Docstring."""
+    #     return True
