@@ -90,7 +90,6 @@ class SyncManager:
             for unit in pool["units"]:
 
                 if isinstance(unit, Application):
-
                     # Creates Unit context for self._run.app_unit_install().
                     unit_context = {
                         "package": "",
