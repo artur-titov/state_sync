@@ -29,19 +29,27 @@ class Application:
         """Returns distributor name."""
         return self._distributor
 
-    def get_packages(self) -> dict:
-        """Docstring"""
+    def is_classic(self) -> bool:
+        """Returns --classic status."""
+        if self.is_classic() is None:
+            return False
+        return self._classic
+
+    def get_items(self) -> dict:
+        """Docstring."""
         return self._packages
 
-    def get_package(self, package: str) -> str:
+    def get_item(self, package: str) -> str:
         """Returns update case."""
         return self._packages[package]
 
     def set_package_update_case(self, target: str, case: str) -> bool:
-        """Docstring."""
-        self._packages.update({target: case})
-        # self._packages[package] = case
-        # return True
+        """Sets package update case."""
+        try:
+            self._packages.update({target: case})
+        except:
+            return False
+        return True
 
     def is_need_to_be_presented(self) -> bool:
         """Returns the desired status of a Unit."""
@@ -64,6 +72,10 @@ class LateCommands:
     def get_name(self) -> str:
         """Returns Application name."""
         return self._name
+
+    def get_items(self) -> str:
+        """Docstring."""
+        return self._commands
 
     def is_need_to_be_executed(self) -> bool:
         """Returns the desired status of a Unit."""
