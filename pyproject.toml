@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 PyYAML = "6.0.2"
-
+jsonargparse = "4.37.0"
 
 [build-system]
 requires = ["poetry-core"]
