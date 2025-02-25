@@ -1,4 +1,4 @@
-"""Module."""
+"""Module with core StateSync functionality."""
 
 import subprocess
 
@@ -7,23 +7,41 @@ from models import Application, LateCommands
 
 
 class StateManager:
-    """Class docstring."""
+    """Defines the stack state without synchronization."""
 
     def __init__(self):
         self._run = CommandRunner()
         self._console = Console()
 
     def sync_from(self, stack: list[dict], plan_only: bool) -> list[dict]:
-        """Docstring."""
+        """Defines application packages updating case.
+
+        Parameters
+        ----------
+        stack: list[dict]
+            Stack of all pools.
+        plan_only: bool
+            'True' for console output only.
+            'False' for pre sync checking where sets update case.
+
+        Returns
+        ----------
+        stack : list[dict]
+            Returns updated stack if 'plan_only' is 'False'.
+
+        Raises
+        ----------
+        RuntimeError
+            Raise stderr.
+        """
         for pool in stack:
 
-            # Defines application packages updating case.
-            if pool.get("name") == "applications":
+            if pool["name"] == "applications":
                 for unit in pool["units"]:
-                    packages = unit.get_packages()
+                    packages = unit.get_items()
 
                     for package in packages:
-                        presented = self._run.package_installation_check(
+                        presented = self._run.app_item_installation_check(
                             distributor=unit.get_distributor(),
                             package=package
                         )
@@ -34,7 +52,7 @@ class StateManager:
                             if plan_only:
                                 self._console.log(
                                     level="warning",
-                                    message=f"{unit.get_name()} ({package}) - will be installed."
+                                    message=f"{unit.get_name()} ({package}) --> will be installed."
                                 )
                             else:
                                 unit.set_package_update_case(
@@ -47,7 +65,7 @@ class StateManager:
                             if plan_only:
                                 self._console.log(
                                     level="warning",
-                                    message=f"{unit.get_name()} ({package}) - will be removed."
+                                    message=f"{unit.get_name()} ({package}) --> will be removed."
                                 )
                             else:
                                 unit.set_package_update_case(
@@ -60,7 +78,7 @@ class StateManager:
                             if plan_only:
                                 self._console.log(
                                     level="info",
-                                    message=f"{unit.get_name()} ({package}) - no needs to be updated."
+                                    message=f"{unit.get_name()} ({package}) --> no needs to be updated."
                                 )
                             else:
                                 unit.set_package_update_case(
@@ -80,57 +98,237 @@ class SyncManager:
 
     def state_from(self, stack: list[dict]):
         """Docstring."""
+        for pool in stack:
+            for unit in pool["units"]:
+
+                # Rules for all Application units.
+                if isinstance(unit, Application):
+
+                    # Creates Unit context for self._run.app_unit_install().
+                    unit_context = {
+                        "package": "",
+                        "distributor": unit.get_distributor(),
+                        "classic": unit.is_classic()
+                    }
+                    # Gets packages for iteration.
+                    packages = unit.get_items()
+
+                    for package, update_case in packages.items():
+                        # Setups package name.
+                        unit_context["package"] = package
+
+                        match update_case:
+                            case "to_install":
+                                self._console.log(
+                                    level="warning",
+                                    message=f"{unit.get_name()} ({package}) --> Package will be installed."
+                                )
+                                try:
+                                    self._run.app_item_install(
+                                        context=unit_context
+                                    )
+                                except RuntimeError as exc:
+                                    raise RuntimeError from exc
+                            case "to_remove":
+                                self._console.log(
+                                    level="warning",
+                                    message=f"{unit.get_name()} ({package}) --> Package will be removed."
+                                )
+                                try:
+                                    self._run.app_item_remove(
+                                        context=unit_context
+                                    )
+                                except RuntimeError as exc:
+                                    raise RuntimeError from exc
+                            case "ignore":
+                                self._console.log(
+                                    level="info",
+                                    message=f"{unit.get_name()} ({package}) --> no needs to be updated."
+                                )
+
+                if isinstance(unit, LateCommands):
+                    print(f"LateCommands Unit: {unit.get_name()}")
 
 
 class CommandRunner:
     """Class docstring."""
 
     def __init__(self):
-        self._installation_command = {
-            "apt": "apt install",
-            "flatpak": "flatpak install flathub",
-            "snap": "snap install",
-        }
-        self._check_installation = {
-            "apt": "dpkg -l | grep",
-            "snap": "snap list",
-            "flatpak": "flatpak list | grep"
+        self._map = {
+            "apt": {
+                "check": "dpkg -l | grep",
+                "install": "apt install"
+            },
+            "snap": {
+                "check": "snap list",
+                "install": "snap install"
+            },
+            "flatpak": {
+                "check": "flatpak list | grep",
+                "install": "flatpak install flathub"
+            }
         }
 
-    def package_installation_check(self, distributor: str, package: str) -> bool:
+    @staticmethod
+    def _execute(item: str, commands: list[str]) -> bool:
+        """Executes shell command.
+
+        Parameters
+        ----------
+        item: str
+            The name of the particle on which the operation is performed.
+        commands: list[str]
+            Shell commands that will be executed.
+
+        Returns
+        ----------
+        bool
+            Returns result (is command executed successfully or not).
+
+        Raises
+        ----------
+        RuntimeError
+            Raise stderr.
+        """
+        for command in commands:
+            process = subprocess.run(
+                args=command,
+                shell=True,
+                check=False
+            )
+            if process.returncode != 0:
+                raise RuntimeError(process.stderr)
+        return True
+
+    def app_item_installation_check(self, distributor: str, package: str) -> bool:
         """Checks if a package is installed on the system.
 
         Parameters
         ----------
         distributor : str
             Package distributor (apt, snap, etc.).
-        package: str
+        package : str
             Item for checking.
 
         Returns
         -------
-        result : bool
-            Is package present in OS.
+        bool
+            Is package present in OS or not.
         """
-        result = subprocess.run(
-            args=f"{self._check_installation[distributor]} {package} > /dev/null 2>&1",
+        command_to_execute = [
+            f"{self._map[distributor]["check"]} {package} > /dev/null 2>&1"
+        ]
+        process = subprocess.run(
+            args=command_to_execute,
             shell=True,
             check=False
         )
-        # if not present
-        if result.returncode != 0:
+        if process.returncode != 0:
             return False
-        # if present
         return True
 
-    @staticmethod
-    def unit_install() -> bool:
-        """Docstring."""
+    def app_item_install(self, context: dict) -> bool:
+        """Docstring.
+
+        Parameters
+        ----------
+        context : dict
+            Unit context.
+
+        Returns
+        -------
+        result : bool
+            Is installation command executed successfully or not.
+
+        Raises
+        ----------
+        bool
+            Command stderr.
+        """
+        commands_to_execute = []
+
+        match context.get("distributor"):
+            case "apt":
+                commands_to_execute.append(
+                    f"sudo {self._map["apt"]["install"]} {context.get("package")} -y"
+                )
+            case "flatpak":
+                commands_to_execute.append(
+                    f"sudo {self._map["flatpak"]["install"]} {context.get("package")} -y"
+                )
+            case "snap":
+                command = f"sudo {self._map["snap"]["install"]} {context.get("package")}"
+                if context.get("classic"):
+                    command += " --classic"
+                commands_to_execute.append(command)
+
+        try:
+            self._execute(
+                item=context.get("package"),
+                commands=commands_to_execute
+            )
+        except RuntimeError as exc:
+            raise RuntimeError from exc
         return True
 
-    @staticmethod
-    def unit_remove() -> bool:
-        """Docstring."""
+    def app_item_remove(self, context: dict) -> bool:
+        """Docstring.
+
+        Parameters
+        ----------
+        context : dict
+            Unit context.
+
+        Returns
+        ----------
+        bool
+            Is command executed successfully or not.
+
+        Raises
+        ----------
+        bool
+            Command stderr.
+        """
+        commands_to_execute = []
+
+        match context.get("distributor"):
+            case "apt":
+                commands_to_execute.append(
+                    f"sudo apt purge {context.get("package")} -y"
+                )
+                commands_to_execute.append(
+                    "sudo apt autoremove -y"
+                )
+            case "flatpak":
+                commands_to_execute.append(
+                    f"sudo flatpak kill {context.get("package")}"
+                )
+                commands_to_execute.append(
+                    f"sudo \
+                    flatpak \
+                    uninstall \
+                    -v \
+                    -y \
+                    --force-remove \
+                    --delete-data \
+                    flathub \
+                    {context.get("package")}"
+                )
+                commands_to_execute.append(
+                    "sudo flatpak uninstall -y --unused"
+                )
+            case "snap":
+                commands_to_execute.append(
+                    f"sudo snap remove --purge {context.get("package")}"
+                )
+
+        try:
+            self._execute(
+                item=context.get("package"),
+                commands=commands_to_execute
+            )
+        except RuntimeError as exc:
+            raise RuntimeError from exc
         return True
 
     @staticmethod
