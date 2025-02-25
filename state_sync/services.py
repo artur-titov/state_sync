@@ -48,43 +48,30 @@ class StateManager:
                         needs_to_be_presented = unit.is_need_to_be_presented()
 
                         if not presented and needs_to_be_presented:
-
-                            if plan_only:
-                                self._console.log(
-                                    level="warning",
-                                    message=f"{unit.get_name()} ({package}) --> will be installed."
-                                )
-                            else:
-                                unit.set_package_update_case(
-                                    target=package,
-                                    case="to_install"
-                                )
+                            message = f"{unit.get_name()} ({package}) --> will be installed."
+                            case = "to_install"
+                            level = "warning"
 
                         elif not needs_to_be_presented and presented:
-
-                            if plan_only:
-                                self._console.log(
-                                    level="warning",
-                                    message=f"{unit.get_name()} ({package}) --> will be removed."
-                                )
-                            else:
-                                unit.set_package_update_case(
-                                    target=package,
-                                    case="to_remove"
-                                )
+                            message = f"{unit.get_name()} ({package}) --> will be removed."
+                            case = "to_remove"
+                            level = "warning"
 
                         else:
+                            message = f"{unit.get_name()} ({package}) --> no needs to be updated."
+                            case = "ignore"
+                            level = "info"
 
-                            if plan_only:
-                                self._console.log(
-                                    level="info",
-                                    message=f"{unit.get_name()} ({package}) --> no needs to be updated."
-                                )
-                            else:
-                                unit.set_package_update_case(
-                                    target=package,
-                                    case="ignore"
-                                )
+                        if not plan_only:
+                            unit.set_package_update_case(
+                                target=package,
+                                case=case
+                            )
+
+                        self._console.log(
+                            level=level,
+                            message=message
+                        )
 
         return stack
 
