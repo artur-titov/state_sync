@@ -31,8 +31,6 @@ class Application:
 
     def is_classic(self) -> bool:
         """Returns --classic status."""
-        if self.is_classic() is None:
-            return False
         return self._classic
 
     def get_items(self) -> dict:
