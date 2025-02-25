@@ -1,8 +1,8 @@
-"""Module"""
+"""Provides model classes."""
 
 
 class Application:
-    """Class docstring."""
+    """Application model."""
 
     def __init__(self, data: dict):
         self._name: str = data.get("app")
@@ -18,11 +18,11 @@ class Application:
 
     @classmethod
     def create_from_config(cls, data: dict):
-        """Creates object Application from dict."""
+        """Creates Application unit from dict."""
         return cls(data)
 
     def get_name(self) -> str:
-        """Returns Application name."""
+        """Returns unit name."""
         return self._name
 
     def get_distributor(self) -> str:
@@ -30,11 +30,11 @@ class Application:
         return self._distributor
 
     def get_items(self) -> dict:
-        """Docstring."""
+        """Returns unit items."""
         return self._packages
 
     def set_package_update_case(self, target: str, case: str) -> bool:
-        """Sets package update case."""
+        """Sets item updating case."""
         try:
             self._packages.update({target: case})
         except:
@@ -46,12 +46,12 @@ class Application:
         return self._classic
 
     def is_need_to_be_presented(self) -> bool:
-        """Returns the desired status of a Unit."""
+        """Returns the desired status of a unit."""
         return self._presented
 
 
 class LateCommands:
-    """Class docstring."""
+    """Late commands model."""
 
     def __init__(self, data: dict):
         self._name: str = data.get("group")
@@ -60,17 +60,17 @@ class LateCommands:
 
     @classmethod
     def create_from_config(cls, data: dict):
-        """Creates object LateCommands from dict."""
+        """Creates LateCommands unit from dict."""
         return cls(data)
 
     def get_name(self) -> str:
-        """Returns Application name."""
+        """Returns unit name."""
         return self._name
 
     def get_items(self) -> str:
-        """Docstring."""
+        """Returns unit items."""
         return self._commands
 
     def is_need_to_be_executed(self) -> bool:
-        """Returns the desired status of a Unit."""
+        """Returns the desired status of a unit."""
         return self._execute

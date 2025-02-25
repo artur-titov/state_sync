@@ -6,11 +6,11 @@ from models import Application, LateCommands
 
 
 class Parsers:
-    """Class docstring."""
+    """Defines parsers functionality."""
 
     @staticmethod
     def yaml(file_path: Path) -> dict:
-        """Returns as dict all data from parsed YAML file.
+        """Returns all data from parsed YAML file as a dict.
 
         Parameters
         ----------
@@ -26,7 +26,7 @@ class Parsers:
             with open(file_path, encoding="utf-8") as config:
                 configuration = yaml.safe_load(config)
         except IOError as ioe:
-            raise IOError(
+            raise RuntimeError(
                 f"An error occurred while reading the file '{file_path}'."
             ) from ioe
 
@@ -34,7 +34,7 @@ class Parsers:
 
 
 class Converters:
-    """Class docstring."""
+    """Defines converters functionality."""
 
     @staticmethod
     def raw_config_to_stack(config: dict) -> list[dict]:

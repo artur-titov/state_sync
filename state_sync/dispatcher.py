@@ -1,4 +1,4 @@
-"""Module."""
+"""Main entrance module."""
 
 import sys
 
@@ -10,7 +10,7 @@ from logs import ConsoleLog as Console
 
 
 class Dispatcher:
-    """Class docstring."""
+    """Distributes input commands."""
 
     def __init__(self):
         self._tools = {
@@ -20,7 +20,7 @@ class Dispatcher:
         self._console = Console()
 
     def now(self, file: Path, arg: str) -> None:
-        """Starts dispatch process.
+        """Entrance.
 
         Parameters
         ----------
@@ -48,7 +48,15 @@ class Dispatcher:
         self._dispatch(stack, arg)
 
     def _dispatch(self, stack: list[dict], arg: str) -> None:
-        """Docstring."""
+        """Starts dispatch process.
+
+        Parameters
+        ----------
+        stack : list[dict]
+            Prepared configuration data.
+        arg : str
+            StateSync case (plan, apply)
+        """
         match arg:
 
             case "plan":
