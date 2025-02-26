@@ -18,7 +18,7 @@ class ConsoleLogFormatter(logging.Formatter):
 
         Returns
         -------
-        record : LogRecord
+        LogRecord
             Returns formatted message.
         """
         marker = {

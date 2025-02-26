@@ -19,8 +19,13 @@ class Parsers:
 
         Returns
         -------
-        config : dict
+        dict
             Configuration file as a Python dictionary.
+
+        Raises
+        -------
+        RuntimeError
+            When error occurred while reading the file.
         """
         try:
             with open(file_path, encoding="utf-8") as config:
@@ -48,8 +53,13 @@ class Converters:
 
         Returns
         -------
-        stack : list[dict]
+        list[dict]
             List of dictionaries with objects.
+
+        Raises
+        -------
+        RuntimeError
+            If pool model not supported.
         """
         stack = []
         models_map = {

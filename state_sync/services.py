@@ -26,13 +26,13 @@ class StateManager:
 
         Returns
         ----------
-        stack : list[dict]
+        list[dict]
             Returns updated stack if 'plan_only' is 'False'.
 
         Raises
         ----------
         RuntimeError
-            From applications: Distributor failure.
+            From applications: When distributor failure.
         """
         for pool in stack:
 
@@ -104,8 +104,8 @@ class SyncManager:
         Raises
         ----------
         RuntimeError
-            From Application: 'Distributor failure' or 'Command stderr with item name'.
-            From LateCommands:
+            From Application: When distributor failure or command executed wit error.
+            From LateCommands: When ...
         """
         for pool in stack:
             for unit in pool["units"]:
@@ -194,7 +194,7 @@ class CommandRunner:
         Raises
         ----------
         RuntimeError
-            Raise stderr with item name.
+            When command executed wit error.
         """
         for command in commands:
             process = subprocess.run(
@@ -222,7 +222,7 @@ class CommandRunner:
         Raises
         ----------
         RuntimeError
-            Distributor failure.
+            When distributor failure.
         """
         if context["distributor"] not in self._map:
             raise RuntimeError(
@@ -252,13 +252,13 @@ class CommandRunner:
 
         Returns
         -------
-        result : bool
+        bool
             Is installation command executed successfully or not.
 
         Raises
         ----------
         RuntimeError
-            'Distributor failure' or 'Command stderr with item name'.
+            When distributor failure or command executed wit error
         """
         commands_to_execute = []
 
@@ -307,7 +307,7 @@ class CommandRunner:
         Raises
         ----------
         RuntimeError
-            'Distributor failure' or 'Command stderr with item name'.
+            When distributor failure or command executed wit error.
         """
         commands_to_execute = []
 
