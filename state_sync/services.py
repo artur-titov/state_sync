@@ -28,19 +28,34 @@ class StateManager:
         ----------
         stack : list[dict]
             Returns updated stack if 'plan_only' is 'False'.
+
+        Raises
+        ----------
+        RuntimeError
+            From applications: Distributor failure.
         """
         for pool in stack:
 
             if pool["name"] == "applications":
                 for unit in pool["units"]:
+                    # Creates Unit context for self._run.app_unit_install().
+                    unit_context = {
+                        "package": "",
+                        "distributor": unit.get_distributor()
+                    }
+                    # Gets packages for iteration.
                     packages = unit.get_items()
 
                     for package in packages:
-                        presented = self._run.app_item_installation_check(
-                            distributor=unit.get_distributor(),
-                            package=package
-                        )
+                        unit_context.update({"package": package})
+
+                        # Gets desired unit state.
                         needs_to_be_presented = unit.is_need_to_be_presented()
+                        # Gets actual unit state.
+                        try:
+                            presented = self._run.app_item_installation_check(unit_context)
+                        except RuntimeError as exc:
+                            raise RuntimeError from exc
 
                         if not presented and needs_to_be_presented:
                             message = f"{unit.get_name()} ({package}) --> will be installed."
@@ -85,6 +100,12 @@ class SyncManager:
         ----------
         stack: list[dict]
             Stack of all pools.
+
+        Raises
+        ----------
+        RuntimeError
+            From Application: 'Distributor failure' or 'Command stderr with item name'.
+            From LateCommands:
         """
         for pool in stack:
             for unit in pool["units"]:
@@ -100,7 +121,7 @@ class SyncManager:
                     packages = unit.get_items()
 
                     for package, update_case in packages.items():
-                        unit_context["package"] = package
+                        unit_context.update({"package": package})
 
                         match update_case:
                             case "to_install":
@@ -182,26 +203,34 @@ class CommandRunner:
                 check=False
             )
             if process.returncode != 0:
-                raise RuntimeError(f"{item} --> {process.stderr}")
+                raise RuntimeError(f"{item} --> Error code: '{process.returncode}' ({process.stderr})")
         return True
 
-    def app_item_installation_check(self, distributor: str, package: str) -> bool:
+    def app_item_installation_check(self, context: dict) -> bool:
         """Checks if a package is installed on the system.
 
         Parameters
         ----------
-        distributor : str
-            Package distributor (apt, snap, etc.).
-        package : str
-            Item for checking.
+        context : dict
+            Unit context.
 
         Returns
         -------
         bool
             Is package present in OS or not.
+
+        Raises
+        ----------
+        RuntimeError
+            Distributor failure.
         """
+        if context["distributor"] not in self._map:
+            raise RuntimeError(
+                f"{context.get("package")} --> Distributor '{context.get("distributor")}' not supported yet."
+            )
+
         command_to_execute = [
-            f"{self._map[distributor]["check"]} {package} > /dev/null 2>&1"
+            f"{self._map[context["distributor"]]["check"]} {context["package"]} > /dev/null 2>&1"
         ]
         process = subprocess.run(
             args=command_to_execute,
@@ -228,8 +257,8 @@ class CommandRunner:
 
         Raises
         ----------
-        bool
-            Command stderr with item name.
+        RuntimeError
+            'Distributor failure' or 'Command stderr with item name'.
         """
         commands_to_execute = []
 
@@ -247,6 +276,10 @@ class CommandRunner:
                 if context.get("classic"):
                     command += " --classic"
                 commands_to_execute.append(command)
+            case _:
+                raise RuntimeError(
+                    f"{context.get("package")} --> Distributor '{context.get("distributor")}' not supported yet."
+                )
 
         try:
             self._execute(
@@ -273,8 +306,8 @@ class CommandRunner:
 
         Raises
         ----------
-        bool
-            Command stderr with item name.
+        RuntimeError
+            'Distributor failure' or 'Command stderr with item name'.
         """
         commands_to_execute = []
 
@@ -291,15 +324,7 @@ class CommandRunner:
                     f"sudo flatpak kill {context.get("package")}"
                 )
                 commands_to_execute.append(
-                    f"sudo \
-                    flatpak \
-                    uninstall \
-                    -v \
-                    -y \
-                    --force-remove \
-                    --delete-data \
-                    flathub \
-                    {context.get("package")}"
+                    f"sudo flatpak uninstall -v -y --force-remove --delete-data flathub {context.get("package")}"
                 )
                 commands_to_execute.append(
                     "sudo flatpak uninstall -y --unused"
@@ -307,6 +332,10 @@ class CommandRunner:
             case "snap":
                 commands_to_execute.append(
                     f"sudo snap remove --purge {context.get("package")}"
+                )
+            case _:
+                raise RuntimeError(
+                    f"{context.get("package")} --> Distributor '{context.get("distributor")}' not supported yet."
                 )
 
         try:
