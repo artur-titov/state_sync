@@ -78,7 +78,7 @@ class StateManager:
                                 message=message
                             )
                         else:
-                            unit.set_package_update_case(
+                            unit.set_package_updating_case(
                                 target=package,
                                 case=case
                             )
