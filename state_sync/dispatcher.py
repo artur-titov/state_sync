@@ -33,10 +33,10 @@ class Dispatcher:
         parse = self._tools.get("parser")
         try:
             config = parse.yaml(file)
-        except IOError as error:
+        except RuntimeError as error:
             self._console.log(
                 level="error",
-                message=error.__cause__
+                message=repr(error)
             )
             sys.exit(1)
 
