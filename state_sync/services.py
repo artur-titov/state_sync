@@ -41,16 +41,16 @@ class StateManager:
                     # Creates Unit context for self._run.app_unit_install().
                     unit_context = {
                         "package": "",
-                        "distributor": unit.get_distributor()
+                        "distributor": unit.distributor
                     }
                     # Gets packages for iteration.
-                    packages = unit.get_items()
+                    packages = unit.packages
 
                     for package in packages:
                         unit_context.update({"package": package})
 
                         # Gets desired unit state.
-                        needs_to_be_presented = unit.is_need_to_be_presented()
+                        needs_to_be_presented = unit.presented
                         # Gets actual unit state.
                         try:
                             presented = self._run.app_item_installation_check(unit_context)
@@ -58,17 +58,17 @@ class StateManager:
                             raise RuntimeError from exc
 
                         if not presented and needs_to_be_presented:
-                            message = f"{unit.get_name()} ({package}) --> will be installed."
+                            message = f"{unit.name} ({package}) --> will be installed."
                             case = "to_install"
                             level = "warning"
 
                         elif not needs_to_be_presented and presented:
-                            message = f"{unit.get_name()} ({package}) --> will be removed."
+                            message = f"{unit.name} ({package}) --> will be removed."
                             case = "to_remove"
                             level = "warning"
 
                         else:
-                            message = f"{unit.get_name()} ({package}) --> no needs to be updated."
+                            message = f"{unit.name} ({package}) --> no needs to be updated."
                             case = "ignore"
                             level = "info"
 
@@ -114,11 +114,11 @@ class SyncManager:
                     # Creates Unit context for self._run.app_unit_install().
                     unit_context = {
                         "package": "",
-                        "distributor": unit.get_distributor(),
-                        "classic": unit.is_classic()
+                        "distributor": unit.distributor,
+                        "classic": unit.classic
                     }
                     # Gets packages for iteration.
-                    packages = unit.get_items()
+                    packages = unit.packages
 
                     for package, update_case in packages.items():
                         unit_context.update({"package": package})
@@ -127,7 +127,7 @@ class SyncManager:
                             case "to_install":
                                 self._console.log(
                                     level="warning",
-                                    message=f"{unit.get_name()} ({package}) --> Package will be installed."
+                                    message=f"{unit.name} ({package}) --> Package will be installed."
                                 )
                                 try:
                                     self._run.app_item_install(
@@ -138,7 +138,7 @@ class SyncManager:
                             case "to_remove":
                                 self._console.log(
                                     level="warning",
-                                    message=f"{unit.get_name()} ({package}) --> Package will be removed."
+                                    message=f"{unit.name} ({package}) --> Package will be removed."
                                 )
                                 try:
                                     self._run.app_item_remove(
