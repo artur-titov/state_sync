@@ -63,42 +63,44 @@ class TestCommandRunner(unittest.TestCase):
 
     @patch('subprocess.run')
     def test__execute__one_command__failure(self, mock_run):
+        invalid_command = "invalid command"
         self.mock_process.returncode = 1
-        self.mock_process.stderr = "execution error"
+        self.mock_process.args = invalid_command
         mock_run.return_value = self.mock_process
 
         # Test with a failing command
         with self.assertRaises(RuntimeError) as context_manager:
             self.command_runner._execute(
                 item="Test",
-                commands=["invalid command"]
+                commands=[invalid_command]
             )
 
         # Verify subprocess.run was called with correct arguments
         mock_run.assert_called_once_with(
-            args="invalid command",
+            args=invalid_command,
             shell=True,
             check=False
         )
 
         # Verify the error message contains the item name and error details
-        expected_error = "Test --> Error code: '1' (execution error)"
+        expected_error = f"Test --> Error code: '1' ({invalid_command})"
         self.assertEqual(str(context_manager.exception), expected_error)
 
     @patch('subprocess.run')
     def test__execute__partial_execution__failure(self, mock_run):
+        invalid_command = "invalid_command"
         success_process = MagicMock()
         success_process.returncode = 0
 
         failure_process = MagicMock()
         failure_process.returncode = 1
-        failure_process.stderr = "Test command failed"
+        failure_process.args = invalid_command
 
         # Make mock_run return different values on consecutive calls
         mock_run.side_effect = [success_process, failure_process]
 
         # Test with multiple commands where the second one fails
-        commands = ["normal command", "invalid command"]
+        commands = ["normal_command", invalid_command]
 
         with self.assertRaises(RuntimeError) as context:
             self.command_runner._execute(
@@ -108,11 +110,11 @@ class TestCommandRunner(unittest.TestCase):
 
         # Verify mock_run was called twice with the correct arguments
         self.assertEqual(mock_run.call_count, second=2)
-        mock_run.assert_any_call(args="normal command", shell=True, check=False)
-        mock_run.assert_any_call(args="invalid command", shell=True, check=False)
+        mock_run.assert_any_call(args="normal_command", shell=True, check=False)
+        mock_run.assert_any_call(args=invalid_command, shell=True, check=False)
 
         # Verify the error message
-        expected_error = "Test --> Error code: '1' (Test command failed)"
+        expected_error = f"Test --> Error code: '1' ({invalid_command})"
         self.assertEqual(str(context.exception), expected_error)
 
 
