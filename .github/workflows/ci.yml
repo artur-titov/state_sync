@@ -28,4 +28,4 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Start tests
-        run: make test
+        run: cd state_sync && python -m unittest discover tests

@@ -1,45 +1,51 @@
+#
+# Basic concept:
+#
+# stack - all settings pools;
+# pool - several sections (applications, late_commands - permanent mandatory names);
+# section - several units (free to naming);
+# unit - entity with items (app, group);
+# item - least entity (package, command);
+#
 global:
   #
-  # If you do not want to install any settings pool, set the value to "no". 
-  # If the pool is actually installed, then after launching the pool 
-  # removal process will not be initialized. 
-  # Removal is implemented at the Applications settings level (present: yes/no).
-  pools_to_synchronize:
-    stack: yes
-    gsettings: no
-    post_commands: no
+  # If you don`t want to sync some pool, just hide them.
+  # App removal implemented at the unit settings level (presented: yes/no).
+  pool_to_synchronize:
+    - applications
+    # - late_commands
 
-stack:
+applications:
   #
-  # You can split the Application settings into different groups.
+  # You can split the application settings into different sections.
   # For example: "test" or "os_features", "user_stack", etc.
   test:
     #
-    # This is a test Application 
+    # This is application example
     # that containing one package.
     # 
-    # Use "app" for text your Application title.
-    # This title will be shows in the terminal output when instalation process starts.
+    # Use "app" for application title.
+    # This title will be shows in the terminal output when sync process starts.
     - app: Hello World
       #
-      # You can add more then one package for one Application.
-      packages:
-        - hello-world
+      # When your application is not installed and "presented" sets to "no"
+      # there will be no changes.
       #
-      # Here you can set distributor for your application - apt, snap, flatpak, etc.
+      # When your application is installed and "presented" sets to "no"
+      # your application will be removed.
+      #
+      # When your application is installed and "presented" sets to "yes"
+      # there will be no changes either.
+      presented: yes
+      #
+      # Here you can set distributor for your application.
+      # (apt, snap, flatpak only supported yet)
       distributor: snap
       #
-      # If your snap Application setup needs a --classic argument, use
-      # "classic: yes" setting. If you don`t need --classic argument 
+      # If your snap application setup needs a --classic argument, set
+      # "classic: yes". If you don`t need --classic argument
       # you don`t need set this parameter. Just don't write it.
       classic: yes
-      #
-      # When your Application is not installet and "present" sets to "no"
-      # There will be no changes.
-      #
-      # When your Application is installed and "present" sets to "no"
-      # Your application will be removed from OS.
-      #
-      # When your Application is installed and "present" sets to "yes"
-      # There will be no changes too.
-      present: yes
+      # You can add more than one package for one application.
+      packages:
+        - hello-world

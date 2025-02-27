@@ -1,21 +1,20 @@
 """Provides console log functionality."""
 
 import logging
-from src.helpers.console_log_formatter import ConsoleLogFormatter as LogFormat
+from helpers import ConsoleLogFormatter as LogFormat
 
 
-# logging.Formatter
-class ConsoleLog():
+class ConsoleLog:
     """Provides methods for output logs to console."""
 
     def __init__(self):
         self.__console_formatter = LogFormat(
-            "%(levelname)s %(name)s %(message)s %(asctime)s",
-            "%H:%M:%S"
+            fmt="%(levelname)s %(name)s %(message)s %(asctime)s",
+            datefmt="%H:%M:%S"
         )
         self.__console_handler = logging.StreamHandler()
         self.__console_handler.setFormatter(self.__console_formatter)
-        self.__logger = logging.getLogger("state-sync")
+        self.__logger = logging.getLogger("StateSync")
         self.__logger.setLevel(logging.INFO)
         if not self.__logger.handlers:
             self.__logger.addHandler(self.__console_handler)

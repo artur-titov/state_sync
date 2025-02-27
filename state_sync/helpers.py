@@ -1,4 +1,4 @@
-"""Provides console output formatting."""
+"""Provides helpers for StateSync functionality."""
 
 import logging
 
@@ -6,12 +6,11 @@ import logging
 class ConsoleLogFormatter(logging.Formatter):
     """Logs formatter."""
 
-
     def format(self, record):
         """Validates config file before start synchronization.
 
         If data not valid prints error and calls sys.exit(1).
-        
+
         Parameters
         ----------
         record : LogRecord
@@ -19,7 +18,7 @@ class ConsoleLogFormatter(logging.Formatter):
 
         Returns
         -------
-        record : LogRecord
+        LogRecord
             Returns formatted message.
         """
         marker = {

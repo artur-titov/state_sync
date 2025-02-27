@@ -1,7 +1,10 @@
 # IDE files
 #
 *.code-workspace
+.vscode
+.idea
 
-# Python cache files
+# Python files
 #
+**/*.*venv
 __pycache__
