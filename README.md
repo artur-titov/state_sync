@@ -13,8 +13,10 @@ Clone this repository. Go to StateSync directory and run command:
 
 ```bash
 # Flow supports:
+#
 # plan - for compare the current OS state with the configuration file without applying changes.
 # apply - for sync configuration file settings with OS.
+
 python state_sync {flow} ~/path/to/config.yaml
 ```
 
