@@ -2,50 +2,77 @@
 # Basic concept:
 #
 # stack - all settings pools;
-# pool - several sections (applications, late_commands - permanent mandatory names);
+# pool - several sections (applications, commands - permanent unchangeable names);
 # section - several units (free to naming);
-# unit - entity with items (app, group);
-# item - least entity (package, command);
+# unit - entity (app, group) with items;
+# item - least item (package, command);
 #
 global:
   #
-  # If you don`t want to sync some pool, just hide them.
+  # If you don`t want to sync some pool, just hide them from this list.
   # App removal implemented at the unit settings level (presented: yes/no).
   pool_to_synchronize:
     - applications
-    # - late_commands
+    - commands
 
+# 'applications' is unchangeable pool name.
 applications:
   #
   # You can split the application settings into different sections.
   # For example: "test" or "os_features", "user_stack", etc.
   test:
     #
-    # This is application example
-    # that containing one package.
+    # This is example of the application
+    # that contains one package.
     # 
     # Use "app" for application title.
     # This title will be shows in the terminal output when sync process starts.
-    - app: Hello World
+    - app: Test app
       #
-      # When your application is not installed and "presented" sets to "no"
+      # When your application is installed and "presented" sets to "yes"
       # there will be no changes.
       #
       # When your application is installed and "presented" sets to "no"
       # your application will be removed.
       #
-      # When your application is installed and "presented" sets to "yes"
-      # there will be no changes either.
+      # When your application is not installed and "presented" sets to "no"
+      # there will be no changes.
       presented: yes
       #
-      # Here you can set distributor for your application.
-      # (apt, snap, flatpak only supported yet)
+      # Here you can set distributor for your application packages.
+      # (apt, snap and flatpak only supported yet)
       distributor: snap
       #
       # If your snap application setup needs a --classic argument, set
       # "classic: yes". If you don`t need --classic argument
       # you don`t need set this parameter. Just don't write it.
-      classic: yes
+      # classic: yes
+      #
       # You can add more than one package for one application.
+      #
+      # If 'classic' sets to 'yes' and you specify more than one package
+      # both will try to be installed to with '--classic' flag.
       packages:
         - hello-world
+
+# 'commands' is unchangeable pool name.
+commands:
+  #
+  # You can split the commands into different sections.
+  # For example: "gsettings" or "git_setup", etc.
+  custom_commands:
+    #
+    # This is example of a group
+    # that contains two commands.
+    #
+    # Use "group" for group title.
+    # It will be shows in the terminal output.
+    - group: Echo
+      # You can add more than one command for one group.
+      commands:
+        - "echo 'hello'"
+        - "echo 'word'"
+      #
+      # If you don`t want to execute group
+      # just set 'execute' to no, or 'False'
+      execute: yes
