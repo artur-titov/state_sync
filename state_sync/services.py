@@ -3,7 +3,7 @@
 import subprocess
 
 from logs import ConsoleLog as Console
-from models import Application, LateCommands
+from models import Application
 
 
 class StateManager:
@@ -36,22 +36,23 @@ class StateManager:
         """
         for pool in stack:
 
-            if pool["name"] == "applications":
-                for unit in pool["units"]:
-                    # Creates Unit context for self._run.app_unit_install().
-                    unit_context = {
-                        "package": "",
-                        "distributor": unit.distributor
-                    }
+            if pool.get("name") == "applications":
+                for unit in pool.get("units"):
+
                     # Gets packages for iteration.
-                    packages = unit.packages
+                    packages = unit.items
 
                     for package in packages:
-                        unit_context.update({"package": package})
 
+                        # Creates Unit context for self._run.app_unit_install().
+                        unit_context = {
+                            "package": package,
+                            "distributor": unit.additionally.get("distributor")
+                        }
                         # Gets desired unit state.
-                        needs_to_be_presented = unit.presented
+                        needs_to_be_presented = unit.additionally.get("presented")
                         # Gets actual unit state.
+
                         try:
                             presented = self._run.app_item_installation_check(unit_context)
                         except RuntimeError as exc:
@@ -108,20 +109,21 @@ class SyncManager:
             From LateCommands: When ...
         """
         for pool in stack:
-            for unit in pool["units"]:
+            for unit in pool.get("units"):
 
                 if isinstance(unit, Application):
-                    # Creates Unit context for self._run.app_unit_install().
-                    unit_context = {
-                        "package": "",
-                        "distributor": unit.distributor,
-                        "classic": unit.classic
-                    }
+
                     # Gets packages for iteration.
-                    packages = unit.packages
+                    packages = unit.items
 
                     for package, update_case in packages.items():
-                        unit_context.update({"package": package})
+
+                        # Creates Unit context for self._run.app_unit_install().
+                        unit_context = {
+                            "package": package,
+                            "distributor": unit.additionally.get("distributor"),
+                            "classic": unit.additionally.get("classic")
+                        }
 
                         match update_case:
                             case "to_install":
@@ -146,9 +148,6 @@ class SyncManager:
                                     )
                                 except RuntimeError as exc:
                                     raise RuntimeError from exc
-
-                if isinstance(unit, LateCommands):
-                    print(f"LateCommands Unit: {unit.get_name()}")
 
         self._console.log(
             level="info",
