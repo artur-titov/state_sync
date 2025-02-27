@@ -49,3 +49,11 @@ applications:
       # You can add more than one package for one application.
       packages:
         - hello-world
+
+late_commands:
+  ui_settings:
+    - group: test_app
+      commands:
+        - command_1
+        - command_2
+      execute: yes
