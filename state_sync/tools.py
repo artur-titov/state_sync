@@ -2,7 +2,7 @@
 
 from pathlib import Path
 import yaml
-from models import Application, LateCommands
+from models import Application
 
 
 class Parsers:
@@ -63,8 +63,7 @@ class Converters:
         """
         stack = []
         models_map = {
-            "applications": Application,
-            "late_commands": LateCommands
+            "applications": Application
         }
 
         # From all pools.
@@ -79,8 +78,6 @@ class Converters:
             match record:
                 case "applications":
                     pool_model = models_map.get("applications")
-                case "late_commands":
-                    pool_model = models_map.get("late_commands")
                 case _:
                     raise RuntimeError(f"Pool Model for {pool} not supported yet.")
 
