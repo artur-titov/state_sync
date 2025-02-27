@@ -18,7 +18,7 @@ class AbstractUnit(ABC):
 
 @dataclass()
 class Application(AbstractUnit):
-    """Application model."""
+    """Application unit model."""
 
     @classmethod
     def create_from_config(cls, data: dict) -> 'Application':
