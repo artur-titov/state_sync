@@ -1,71 +1,26 @@
-# StateSync utility
+# StateSync
 
-This utility implements a [GitOps](https://www.redhat.com/en/topics/devops/what-is-gitops) approach for managing OS packages and settings.
+This utility synchronize your OS configuration from YAML file. 
 
-Of course, I know about [Ansible]([https://](https://www.redhat.com/en/ansible-collaborative)) and [Ubuntu autoinstall](https://canonical-subiquity.readthedocs-hosted.com/en/latest/intro-to-autoinstall.html), but right now, the main goal of this repository is to learn the technologies more deeply.
+You can manage OS packages and settings with GitOps approach.
+
 
 ## How it works
 
 First you need to create a YAML [configuration file](https://github.com/artur-titov/state-sync/blob/master/config-example.yml).
 
-Following the GitOps approach, place the config file in a separate repository.
+Clone this repository. Go to StateSync directory and run command:
 
-Distribution via a Deb package and sync based on a remote file are not implemented yet. However, you can clone both repositories to the target host.
-
-After that run sync command:
-
-```sh
-make sync FROM="<path_to_config_file>"
+```bash
+# Flow supports:
+# plan - for compare the current OS state with the configuration file without applying changes.
+# apply - for sync configuration file settings with OS.
+python state_sync {flow} ~/path/to/config.yaml
 ```
 
-The OS synchronizes with the settings entered in the configuration file.
-
-[![asciicast](https://asciinema.org/a/697470.svg)](https://asciinema.org/a/697470)
-
-## Tested on
+## Tested with
 
 ![example branch parameter](https://github.com/artur-titov/state-sync/actions/workflows/ci.yml/badge.svg?branch=development)
 
 - Ubuntu 22.04+
 - Python 3.12+
-
-## Roadmap
-
-### Step 1
-
-| Status | Target    | Description   |
-|:-------| :---      | :---          |
-| ✅      | Basic app syncronization  | *apt, snap, flatpak* |
-| ✅      | Unit tests    ||
-| ✅      | CI | Continuous integration |
-
-### Step 2
-
-| Status    | Target                    | Description   |
-| :---      |:--------------------------| :---          |
-| planned   | Late commands             | Commands for custom installations |
-| planned   | Distribute as Deb-package | For 'apt install state-sync' |
-| planned   | CD                        | Continuous delivery |
-
-### Step 3
-
-| Status    | Target    | Description   |
-| :---      | :---      | :---          |
-| backlog   | Integration tests ||
-| backlog   | Gsettings  ||
-
-### Step 4
-
-| Status    | Target    | Description   |
-| :---      | :---      | :---          |
-| backlog   | Sync based on remote file? ||
-| backlog   | Custom app synchronisation ||
-
-### In Future
-
-| Status    | Target    | Description   |
-| :---      | :---      | :---          |
-| backlog   | Support other distributors | pacman, dnf, etc. |
-| backlog   | Pull model | Settings to sync in background |
-
-...
