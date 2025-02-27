@@ -29,3 +29,23 @@ class Application:
     def set_package_updating_case(self, target: str, case: str) -> None:
         """Sets item updating case."""
         self.packages.update({target: case})
+
+
+@dataclass()
+class LateCommands:
+    """Late commands model."""
+    execute: bool
+    name: str = None
+    commands: list[str] = field(default_factory=list)
+
+    @classmethod
+    def create_from_config(cls, data: dict):
+        unit = cls(
+            name=data.get("group"),
+            execute=data.get("execute")
+        )
+
+        for command in data.get("commands", []):
+            unit.commands.append(command)
+
+        return unit
