@@ -51,8 +51,8 @@ class StateManager:
                         # Gets actual unit state.
                         try:
                             presented = self._run.app_item_installation_check(unit_context)
-                        except RuntimeError as exc:
-                            raise RuntimeError from exc
+                        except RuntimeError:
+                            raise
 
                         if not presented and needs_to_be_presented:
                             message = f"{unit.name} ({item}) --> will be installed."
@@ -144,8 +144,8 @@ class SyncManager:
                                     self._run.app_item_install(
                                         context=unit_context
                                     )
-                                except RuntimeError as exc:
-                                    raise RuntimeError from exc
+                                except RuntimeError:
+                                    raise
                             case "to_remove":
                                 self._console.log(
                                     level="warning",
@@ -155,8 +155,8 @@ class SyncManager:
                                     self._run.app_item_remove(
                                         context=unit_context
                                     )
-                                except RuntimeError as exc:
-                                    raise RuntimeError from exc
+                                except RuntimeError:
+                                    raise
                             case _:
                                 pass
 
@@ -173,8 +173,8 @@ class SyncManager:
                                 item=unit.name,
                                 commands=unit.items
                             )
-                        except RuntimeError as exc:
-                            raise RuntimeError from exc
+                        except RuntimeError:
+                            raise
 
 
         self._console.log(
@@ -230,7 +230,7 @@ class CommandRunner:
                 check=False
             )
             if process.returncode != 0:
-                raise RuntimeError(f"{item} --> Error code: '{process.returncode}' ({process.stderr})")
+                raise RuntimeError(f"{item} --> Error code: '{process.returncode}' ({process.args})")
         return True
 
     def app_item_installation_check(self, context: dict) -> bool:
@@ -313,8 +313,8 @@ class CommandRunner:
                 item=context.get("package"),
                 commands=commands_to_execute
             )
-        except RuntimeError as exc:
-            raise RuntimeError from exc
+        except RuntimeError:
+            raise
         return True
 
     def app_item_remove(self, context: dict) -> bool:
@@ -370,8 +370,8 @@ class CommandRunner:
                 item=context.get("package"),
                 commands=commands_to_execute
             )
-        except RuntimeError as exc:
-            raise RuntimeError from exc
+        except RuntimeError:
+            raise
         return True
 
     def commands_execute(self, item: str, commands: dict[str, str]) -> bool:
@@ -404,6 +404,6 @@ class CommandRunner:
                 item=item,
                 commands=commands_to_execute
             )
-        except RuntimeError as exc:
-            raise RuntimeError from exc
+        except RuntimeError:
+            raise
         return True
