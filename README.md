@@ -9,12 +9,12 @@ You can manage OS packages and settings with GitOps approach.
 
 First you need to create a YAML [configuration file](https://github.com/artur-titov/state-sync/blob/master/config-example.yml).
 
-Clone this repository. Go to StateSync directory and run command:
+Clone this repository then go to the StateSync directory and run command:
 
 ```bash
 # Flow supports:
 #
-# plan - for compare the current OS state with the configuration file without applying changes.
+# plan - for compare current OS state with configuration file without changes applying.
 # apply - for sync configuration file settings with OS.
 
 python state_sync {flow} ~/path/to/config.yaml
