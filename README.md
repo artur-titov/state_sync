@@ -9,7 +9,7 @@ You can manage OS packages and settings with GitOps approach.
 
 First you need to create a YAML [configuration file](https://github.com/artur-titov/state-sync/blob/master/config-example.yml).
 
-Clone this repository then go to the StateSync directory and run command:
+Clone this repository then create venv and install requirements. After that go to the StateSync directory and run command:
 
 ```bash
 # Flow supports:
