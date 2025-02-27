@@ -20,6 +20,8 @@ Clone this repository then create venv and install requirements. After that go t
 python state_sync {flow} ~/path/to/config.yaml
 ```
 
+[![asciicast](https://asciinema.org/a/705701.svg)](https://asciinema.org/a/705701)
+
 ## Tested with
 
 ![example branch parameter](https://github.com/artur-titov/state-sync/actions/workflows/ci.yml/badge.svg?branch=development)
