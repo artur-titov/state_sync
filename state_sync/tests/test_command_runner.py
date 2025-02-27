@@ -398,3 +398,28 @@ class TestCommandRunner(unittest.TestCase):
         # Verify the error message contains the expected text
         expected_error = "test_package --> Distributor 'unknown' not supported yet."
         self.assertIn(expected_error, str(context_manager.exception))
+
+
+    @patch.object(Runner, attribute='_execute')
+    def test__commands_execute__success(self, mock_execute):
+        # Set up mock to return True
+        mock_execute.return_value = True
+
+        commands_to_execute = [
+            "echo 'hello'",
+            "echo 'world'"
+        ]
+
+        self.command_runner._execute(
+            item="Test unit",
+            commands=commands_to_execute
+        )
+
+        # Verify _execute was called with correct arguments
+        mock_execute.assert_called_once_with(
+            item="Test unit",
+            commands=[
+                "echo 'hello'",
+                "echo 'world'"
+            ]
+        )

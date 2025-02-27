@@ -34,6 +34,23 @@ class Application(AbstractUnit):
 
         return unit
 
-    def set_package_updating_case(self, target: str, case: str) -> None:
+    def set_item_sync_case(self, item: str, case: str) -> None:
         """Sets item updating case."""
-        self.items.update({target: case})
+        self.items.update({item: case})
+
+
+@dataclass()
+class Command(AbstractUnit):
+    """Command unit model."""
+
+    @classmethod
+    def create_from_config(cls, data: dict) -> 'Command':
+        """Docstring."""
+        unit = cls(name=data.get("group"))
+
+        unit.additionally.update({"execute": data.get("execute")})
+
+        for command in data.get("commands", []):
+            unit.items.update({command: "as_unit"})
+
+        return unit

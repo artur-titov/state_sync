@@ -3,7 +3,7 @@
 import subprocess
 
 from logs import ConsoleLog as Console
-from models import Application
+from models import Application, Command
 
 
 class StateManager:
@@ -35,41 +35,37 @@ class StateManager:
             From applications: When distributor failure.
         """
         for pool in stack:
+            for unit in pool.get("units"):
 
-            if pool.get("name") == "applications":
-                for unit in pool.get("units"):
+                if pool.get("name") == "applications":
 
-                    # Gets packages for iteration.
-                    packages = unit.items
-
-                    for package in packages:
-
+                    for item in unit.items:
                         # Creates Unit context for self._run.app_unit_install().
                         unit_context = {
-                            "package": package,
+                            "package": item,
                             "distributor": unit.additionally.get("distributor")
                         }
                         # Gets desired unit state.
                         needs_to_be_presented = unit.additionally.get("presented")
-                        # Gets actual unit state.
 
+                        # Gets actual unit state.
                         try:
                             presented = self._run.app_item_installation_check(unit_context)
                         except RuntimeError as exc:
                             raise RuntimeError from exc
 
                         if not presented and needs_to_be_presented:
-                            message = f"{unit.name} ({package}) --> will be installed."
+                            message = f"{unit.name} ({item}) --> will be installed."
                             case = "to_install"
                             level = "warning"
 
                         elif not needs_to_be_presented and presented:
-                            message = f"{unit.name} ({package}) --> will be removed."
+                            message = f"{unit.name} ({item}) --> will be removed."
                             case = "to_remove"
                             level = "warning"
 
                         else:
-                            message = f"{unit.name} ({package}) --> no needs to be updated."
+                            message = f"{unit.name} ({item}) --> no needs to be updated."
                             case = "ignore"
                             level = "info"
 
@@ -79,10 +75,25 @@ class StateManager:
                                 message=message
                             )
                         else:
-                            unit.set_package_updating_case(
-                                target=package,
+                            unit.set_item_sync_case(
+                                item=item,
                                 case=case
                             )
+
+                if pool.get("name") == "commands":
+
+                    if unit.additionally.get("execute"):
+                        message = f"{unit.name} (commands) --> will be executed."
+                        level = "warning"
+                    else:
+                        message = f"{unit.name} (commands) --> will not be executed."
+                        level = "info"
+
+                    if plan_only:
+                        self._console.log(
+                            level=level,
+                            message=message
+                        )
 
         return stack
 
@@ -105,19 +116,17 @@ class SyncManager:
         Raises
         ----------
         RuntimeError
-            From Application: When distributor failure or command executed wit error.
-            From LateCommands: When ...
+            From Application: When distributor failure or command executed with error.
+            From Commands: When executing failed.
         """
         for pool in stack:
             for unit in pool.get("units"):
 
                 if isinstance(unit, Application):
 
-                    # Gets packages for iteration.
                     packages = unit.items
 
                     for package, update_case in packages.items():
-
                         # Creates Unit context for self._run.app_unit_install().
                         unit_context = {
                             "package": package,
@@ -129,7 +138,7 @@ class SyncManager:
                             case "to_install":
                                 self._console.log(
                                     level="warning",
-                                    message=f"{unit.name} ({package}) --> Package will be installed."
+                                    message=f"{unit.name} ({package}) --> Installation starts:"
                                 )
                                 try:
                                     self._run.app_item_install(
@@ -140,7 +149,7 @@ class SyncManager:
                             case "to_remove":
                                 self._console.log(
                                     level="warning",
-                                    message=f"{unit.name} ({package}) --> Package will be removed."
+                                    message=f"{unit.name} ({package}) --> Removing starts:"
                                 )
                                 try:
                                     self._run.app_item_remove(
@@ -148,6 +157,25 @@ class SyncManager:
                                     )
                                 except RuntimeError as exc:
                                     raise RuntimeError from exc
+                            case _:
+                                pass
+
+                if isinstance(unit, Command):
+
+                    if unit.additionally.get("execute"):
+                        self._console.log(
+                            level="warning",
+                            message=f"{unit.name} (commands) --> Executing starts:"
+                        )
+
+                        try:
+                            self._run.commands_execute(
+                                item=unit.name,
+                                commands=unit.items
+                            )
+                        except RuntimeError as exc:
+                            raise RuntimeError from exc
+
 
         self._console.log(
             level="info",
@@ -193,7 +221,7 @@ class CommandRunner:
         Raises
         ----------
         RuntimeError
-            When command executed wit error.
+            When command executed with error.
         """
         for command in commands:
             process = subprocess.run(
@@ -257,7 +285,7 @@ class CommandRunner:
         Raises
         ----------
         RuntimeError
-            When distributor failure or command executed wit error
+            When distributor failure or command executed with error
         """
         commands_to_execute = []
 
@@ -306,7 +334,7 @@ class CommandRunner:
         Raises
         ----------
         RuntimeError
-            When distributor failure or command executed wit error.
+            When distributor failure or command executed with error.
         """
         commands_to_execute = []
 
@@ -346,6 +374,36 @@ class CommandRunner:
             raise RuntimeError from exc
         return True
 
-    # def late_command() -> bool:
-    #     """Docstring."""
-    #     return True
+    def commands_execute(self, item: str, commands: dict[str, str]) -> bool:
+        """Prepares commands for execution.
+
+        Parameters
+        ----------
+        item : str
+            Unit name.
+        commands : dict[str, str]
+            List of unit items.
+
+        Returns
+        ----------
+        bool
+            Is command executed successfully or not.
+
+        Raises
+        ----------
+        RuntimeError
+            When command executed with error.
+        """
+        commands_to_execute = []
+
+        for command in commands:
+            commands_to_execute.append(command)
+
+        try:
+            self._execute(
+                item=item,
+                commands=commands_to_execute
+            )
+        except RuntimeError as exc:
+            raise RuntimeError from exc
+        return True

@@ -2,7 +2,7 @@
 
 from pathlib import Path
 import yaml
-from models import Application
+from models import Application, Command
 
 
 class Parsers:
@@ -63,28 +63,28 @@ class Converters:
         """
         stack = []
         models_map = {
-            "applications": Application
+            "applications": Application,
+            "commands": Command
         }
 
         # From all pools.
         for record in config["global"]["pool_to_synchronize"]:
+
+            # Sets pool Model.
+            pool_model = models_map.get(record)
+
+            if pool_model is None:
+                raise RuntimeError(f"Pool Model for '{record}' not supported yet.")
 
             pool = {
                 "name": record,
                 "units": []
             }
 
-            # Sets pool Model.
-            match record:
-                case "applications":
-                    pool_model = models_map.get("applications")
-                case _:
-                    raise RuntimeError(f"Pool Model for {pool} not supported yet.")
-
             # From all sections in pool.
             for section in config[record]:
-
                 for unit in config[record][section]:
+
                     pool["units"].append(
                         pool_model.create_from_config(unit)
                     )
